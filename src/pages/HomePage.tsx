@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import FastStyleTransferModel from '../components/fastStyleTransferModel/FastStyleTransferModel'
-import { Card } from '@mui/material'
+import { Button, Card } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import ImageSelector from '../components/imageSelector/ImageSelector'
 import { useState } from 'react'
 
-
 import PhotoDisplay from '../components/photoDisplay/PhotoDisplay'
 import styles from './home.module.css'
+import { loadImage } from '../modules/utils'
 
 const useStyles = makeStyles({
   root: {
@@ -20,7 +19,7 @@ const useStyles = makeStyles({
   },
 
   card: {
-    height: '100%',
+    marginBottom: '15px',
     display: 'flex',
     flexDirection: 'column',
   },
@@ -50,9 +49,7 @@ const HomePage = () => {
     imageToStyle: '/images/turtle.jpg',
   })
 
- 
   const updateStyleImageCallback = (styleImageUrl: string) => {
-    //console.log("Updating image: " + styleImageElement);
     setState({
       ...state,
       styleImage: styleImageUrl,
@@ -60,7 +57,6 @@ const HomePage = () => {
   }
 
   const updateImageToStyleCallback = (imageToStyle: string) => {
-    //console.log("Updating image: " + styleImageElement);
     setState({
       ...state,
       imageToStyle: imageToStyle,
@@ -132,6 +128,65 @@ const HomePage = () => {
     <>
       <FastStyleTransferModel>
         {(doStyleTransfer) => {
+          {
+            const resizeAndStylizeImage = (
+              imageToStyle: HTMLImageElement,
+              styleImage: HTMLImageElement,
+              imageCanvas: HTMLCanvasElement,
+              targetCanvas: HTMLCanvasElement
+            ) => {
+              let imageCanvasCtx = imageCanvas.getContext('2d')
+
+              let imageAspectRatio = imageToStyle.height / imageToStyle.width
+              imageCanvas.height = imageCanvas.width * imageAspectRatio
+              console.log('New targetCanvas.height:' + imageCanvas.height)
+              if (imageCanvasCtx != null) {
+                imageCanvasCtx.drawImage(
+                  imageToStyle,
+                  0,
+                  0,
+                  imageToStyle.width,
+                  imageToStyle.height,
+                  0,
+                  0,
+                  imageCanvas.width,
+                  imageCanvas.height
+                )
+                let imageToStyleImgData = imageCanvasCtx.getImageData(
+                  0,
+                  0,
+                  imageCanvas.width,
+                  imageCanvas.height
+                )
+                doStyleTransfer(imageToStyleImgData, styleImage, targetCanvas)
+              }
+            }
+
+            var stylizeImage = async () => {
+              let canvas1 = document.querySelector(
+                '#canvasContainer1'
+              ) as HTMLCanvasElement
+              let canvas2 = document.querySelector(
+                '#canvasContainer2'
+              ) as HTMLCanvasElement
+
+              let styleImageP = loadImage(state.styleImage)
+              let imageToStyleP = loadImage(state.imageToStyle)
+
+              Promise.all([styleImageP, imageToStyleP])
+                .then((images) => {
+                  let styleImage = images[0]
+                  let imageToStyle = images[1]
+                  resizeAndStylizeImage(
+                    imageToStyle,
+                    styleImage,
+                    canvas1,
+                    canvas2
+                  )
+                })
+                .catch((err) => console.error(err))
+            }
+          }
           return (
             <>
               <div>
@@ -155,6 +210,14 @@ const HomePage = () => {
                         />
                       )}
                     </Card>
+
+                    <Button
+                      sx={{ width: '100%', mt: '20px' }}
+                      variant='contained'
+                      onClick={() => stylizeImage()}
+                    >
+                      GENERATE
+                    </Button>
                   </div>
                   <div className={styles.result}>
                     {state.mode == 'photo' && (

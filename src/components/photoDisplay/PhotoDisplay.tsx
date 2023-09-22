@@ -1,14 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable prefer-const */
-import { useEffect } from 'react'
-
-import { Card, Grid } from '@mui/material'
-import { loadImage } from '../../modules/utils'
+import { Button, Card, Grid } from '@mui/material'
 import styles from './photo.module.css'
 
 type Props = {
-  styleImageUrl: string
-  imageToStyleUrl: string
+  styleImageUrl?: string | undefined
+  imageToStyleUrl?: string
   doStyleTransferCallback: (
     imageToStyle: ImageData,
     styleImage: HTMLImageElement,
@@ -24,7 +19,7 @@ const PhotoDisplay = ({
   doStyleTransferCallback,
 }: Props) => {
   //const [styleImage, setStyleImage] = useState('/images/The_Great_Wave_off_Kanagawa.jpg' as string)
-
+  console.log('imageToStyle.width:' + styleImageUrl + ' ' + imageToStyleUrl)
   const resizeAndStylizeImage = (
     imageToStyle: HTMLImageElement,
     styleImage: HTMLImageElement,
@@ -66,25 +61,35 @@ const PhotoDisplay = ({
     }
   }
 
-  useEffect(() => {
-    let canvas1 = document.querySelector(
-      '#canvasContainer1'
-    ) as HTMLCanvasElement
-    let canvas2 = document.querySelector(
+  console.log('styleImageUrl:' + resizeAndStylizeImage)
+
+  const handleDownloadImage = () => {
+    let imageCanvas = document.querySelector(
       '#canvasContainer2'
     ) as HTMLCanvasElement
 
-    let styleImageP = loadImage(styleImageUrl)
-    let imageToStyleP = loadImage(imageToStyleUrl)
+    let imageCanvasCtx = imageCanvas.getContext('2d')
 
-    Promise.all([styleImageP, imageToStyleP])
-      .then((images) => {
-        let styleImage = images[0]
-        let imageToStyle = images[1]
-        resizeAndStylizeImage(imageToStyle, styleImage, canvas1, canvas2)
-      })
-      .catch((err) => console.error(err))
-  })
+    let downloadImgData = imageCanvasCtx?.getImageData(
+      0,
+      0,
+      imageCanvas.width,
+      imageCanvas.height
+    )
+
+    if (downloadImgData) {
+      // Convert image data to a data URL
+      const dataURL = imageCanvas.toDataURL('image/png')
+
+      // Create a download link
+      const a = document.createElement('a')
+      a.href = dataURL
+      a.download = 'image.png' // Set the desired file name
+
+      // Trigger the download
+      a.click()
+    }
+  }
 
   return (
     <>
@@ -98,6 +103,13 @@ const PhotoDisplay = ({
           <Card className={styles.card}>
             <canvas id='canvasContainer2' className={styles.canvasPhoto} />
           </Card>
+          <Button
+            sx={{ marginTop: '10px' }}
+            variant='contained'
+            onClick={handleDownloadImage}
+          >
+            Download
+          </Button>
         </Grid>
       </Grid>
     </>

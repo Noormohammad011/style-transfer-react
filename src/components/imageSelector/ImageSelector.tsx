@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@mui/styles'
 import { Button, CardMedia, Grid, NativeSelect } from '@mui/material'
+import Carousel from 'react-material-ui-carousel'
 
 const useStyles = makeStyles({
   root: {
@@ -40,6 +41,7 @@ const ImageSelector = ({
     if (FileReader && files && files.length) {
       const fr = new FileReader()
       fr.onload = function () {
+        console.log('key=' + listKey)
         const imagesList = document.getElementById(listKey) as HTMLSelectElement
 
         if (files && files[0] != null) {
@@ -64,7 +66,14 @@ const ImageSelector = ({
     evt: React.ChangeEvent<{ name?: string; value: unknown }>
   ) => {
     const value = evt.target.value as string
+    console.log('Changing state:' + value)
+
     setImage(value)
+  }
+
+  const imageHandler = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
+    const url = e.currentTarget.getAttribute('src') as string
+    setImage(url)
   }
 
   return (
@@ -77,6 +86,7 @@ const ImageSelector = ({
         component='img'
         onLoad={notifyImageLoaded}
         key='selectorImage'
+        height={300}
       />
       <Grid
         container
@@ -119,6 +129,27 @@ const ImageSelector = ({
               )
             })}
           </NativeSelect>
+        </Grid>
+
+        <Grid item xs={12} md={12} key='carousel' mt={2}>
+          <Carousel
+            key='carousel'
+            autoPlay={false}
+            animation='slide'
+            navButtonsAlwaysVisible={true}
+          >
+            {list.map((image, index) => {
+              return (
+                <img
+                  width='100%'
+                  height='200'
+                  key={'imageOption' + index}
+                  src={image.url}
+                  onClick={imageHandler}
+                />
+              )
+            })}
+          </Carousel>
         </Grid>
       </Grid>
     </>

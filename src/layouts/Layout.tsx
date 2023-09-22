@@ -1,18 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import styles from "./layout.module.css";
-import utilStyles from "./utils.module.css";
+import styles from './layout.module.css'
+import utilStyles from './utils.module.css'
 
-const name = "Fast Style Transfer for Arbitrary Styles";
-export const siteTitle = "Fast Style Transfer for Arbitrary Styles Demo";
+const name = 'Fast Style Transfer for Arbitrary Styles'
+export const siteTitle = 'Fast Style Transfer for Arbitrary Styles Demo'
 
 export default function Layout({
   children,
   home,
 }: {
-  children: React.ReactNode;
-  home?: boolean;
+  children: React.ReactNode
+  home?: boolean
 }) {
-  //return <div className={styles.container}>{children}</div>
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -22,10 +20,10 @@ export default function Layout({
           </>
         ) : (
           <>
-            <a href="/">
+            <a href='/'>
               <a>
                 <img
-                  src="/images/profile.jpg"
+                  src='/images/profile.jpg'
                   className={utilStyles.borderCircle}
                   height={108}
                   width={108}
@@ -34,7 +32,7 @@ export default function Layout({
               </a>
             </a>
             <h2 className={utilStyles.headingLg}>
-              <a href="/">
+              <a href='/'>
                 <a className={utilStyles.colorInherit}>{name}</a>
               </a>
             </h2>
@@ -44,11 +42,11 @@ export default function Layout({
       <main>{children}</main>
       {!home && (
         <div className={styles.backToHome}>
-          <a href="/">
+          <a href='/'>
             <a>← Back to home</a>
           </a>
         </div>
       )}
     </div>
-  );
+  )
 }

@@ -1,1 +1,1 @@
-export { default as loadImage } from './imageUtils';
+export { default as loadImage } from './imageUtils'
