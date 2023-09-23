@@ -3,7 +3,6 @@ import { Button, Card } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import ImageSelector from '../components/imageSelector/ImageSelector'
 import { useState } from 'react'
-
 import PhotoDisplay from '../components/photoDisplay/PhotoDisplay'
 import styles from './home.module.css'
 import { loadImage } from '../modules/utils'
@@ -69,10 +68,6 @@ const HomePage = () => {
       name: 'kanagawa_great_wave',
     },
     {
-      url: '/images/Vassily_Kandinsky%2C_1913_-_Composition_7.jpg',
-      name: 'kandinsky_composition_7',
-    },
-    {
       url: '/images/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg',
       name: 'hubble_pillars_of_creation',
     },
@@ -85,20 +80,8 @@ const HomePage = () => {
       name: 'turner_nantes',
     },
     {
-      url: '/images/Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg',
-      name: 'munch_scream',
-    },
-    {
       url: '/images/Les_Demoiselles_d%27Avignon.jpg',
       name: 'picasso_demoiselles_avignon',
-    },
-    {
-      url: '/images/Pablo_Picasso%2C_1911-12%2C_Violon_%28Violin%29%2C_oil_on_canvas%2C_Kr%C3%B6ller-M%C3%BCller_Museum%2C_Otterlo%2C_Netherlands.jpg',
-      name: 'picasso_violin',
-    },
-    {
-      url: '/images/Pablo_Picasso%2C_1911%2C_Still_Life_with_a_Bottle_of_Rum%2C_oil_on_canvas%2C_61.3_x_50.5_cm%2C_Metropolitan_Museum_of_Art%2C_New_York.jpg',
-      name: 'picasso_bottle_of_rum',
     },
     { url: '/images/Large_bonfire.jpg', name: 'fire' },
     {
@@ -112,10 +95,6 @@ const HomePage = () => {
     {
       url: '/images/Derkovits_Gyula_Talig%C3%A1s_1920.jpg',
       name: 'derkovtis_talig',
-    },
-    {
-      url: '/images/Amadeo_de_Souza-Cardoso%2C_1915_-_Landscape_with_black_figure.jpg',
-      name: 'amadeo_cardoso',
     },
   ]
 
@@ -188,18 +167,11 @@ const HomePage = () => {
             }
           }
           return (
-            <>
-              <div>
-                <div className={styles.container} key='dasboard'>
-                  <div className={styles.inputFields}>
-                    <Card className={classes.card}>
-                      <ImageSelector
-                        listKey='styleImages'
-                        list={predefinedStylesList}
-                        uploadImageLabel='Upload Style'
-                        setStateCallback={updateStyleImageCallback}
-                      />
-                    </Card>
+            <div>
+              <div className={styles.container} key='dasboard'>
+                <div className={styles.inputFields}>
+                  <div className={styles.imgWraper}>
+                    <h3>Content Image</h3>
                     <Card>
                       {state.mode == 'photo' && (
                         <ImageSelector
@@ -210,27 +182,39 @@ const HomePage = () => {
                         />
                       )}
                     </Card>
-
-                    <Button
-                      sx={{ width: '100%', mt: '20px' }}
-                      variant='contained'
-                      onClick={() => stylizeImage()}
-                    >
-                      GENERATE
-                    </Button>
                   </div>
-                  <div className={styles.result}>
-                    {state.mode == 'photo' && (
-                      <PhotoDisplay
-                        styleImageUrl={state.styleImage}
-                        imageToStyleUrl={state.imageToStyle}
-                        doStyleTransferCallback={doStyleTransfer}
+                  <div className={styles.imgWraper}>
+                    <h3>Style Image</h3>
+                    <Card className={classes.card}>
+                      <ImageSelector
+                        listKey='styleImages'
+                        list={predefinedStylesList}
+                        uploadImageLabel='Upload Style'
+                        setStateCallback={updateStyleImageCallback}
                       />
-                    )}
+                    </Card>
                   </div>
                 </div>
+                <div className={styles.button}>
+                  <Button
+                    sx={{ width: '100%', mt: '20px' }}
+                    variant='contained'
+                    onClick={() => stylizeImage()}
+                  >
+                    GENERATE
+                  </Button>
+                </div>
+                <div className={styles.result}>
+                  {state.mode == 'photo' && (
+                    <PhotoDisplay
+                      styleImageUrl={state.styleImage}
+                      imageToStyleUrl={state.imageToStyle}
+                      doStyleTransferCallback={doStyleTransfer}
+                    />
+                  )}
+                </div>
               </div>
-            </>
+            </div>
           )
         }}
       </FastStyleTransferModel>

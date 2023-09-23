@@ -36,8 +36,6 @@ const ImageSelector = ({
   ) => {
     const tgt = evt.target as HTMLInputElement
     const files = tgt.files
-
-    // FileReader support
     if (FileReader && files && files.length) {
       const fr = new FileReader()
       fr.onload = function () {
@@ -131,18 +129,42 @@ const ImageSelector = ({
           </NativeSelect>
         </Grid>
 
-        <Grid item xs={12} md={12} key='carousel' mt={2}>
+        <Grid
+          item
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          xs={12}
+          md={12}
+          key='carousel'
+          mt={2}
+        >
           <Carousel
+            sx={{ width: '120px', height: '70px' }}
+            navButtonsProps={{
+              style: {
+                height: '20px',
+                width: '0px',
+              },
+            }}
+            navButtonsWrapperProps={{
+              style: {
+                fontSize: '20px',
+              },
+            }}
             key='carousel'
             autoPlay={false}
             animation='slide'
+            indicators={false}
             navButtonsAlwaysVisible={true}
           >
             {list.map((image, index) => {
               return (
                 <img
                   width='100%'
-                  height='200'
+                  height='100%'
                   key={'imageOption' + index}
                   src={image.url}
                   onClick={imageHandler}

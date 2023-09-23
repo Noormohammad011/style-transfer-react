@@ -18,8 +18,6 @@ const PhotoDisplay = ({
   imageToStyleUrl,
   doStyleTransferCallback,
 }: Props) => {
-  //const [styleImage, setStyleImage] = useState('/images/The_Great_Wave_off_Kanagawa.jpg' as string)
-  console.log('imageToStyle.width:' + styleImageUrl + ' ' + imageToStyleUrl)
   const resizeAndStylizeImage = (
     imageToStyle: HTMLImageElement,
     styleImage: HTMLImageElement,
@@ -30,15 +28,6 @@ const PhotoDisplay = ({
 
     let imageAspectRatio = imageToStyle.height / imageToStyle.width
     imageCanvas.height = imageCanvas.width * imageAspectRatio
-    console.log('New targetCanvas.height:' + imageCanvas.height)
-    //const imgSize = Math.min(inputImage.width, inputImage.height);
-    // The following two lines yield a central based cropping.
-    // They can both be amended to be 0, if you wish it to be
-    // a left based cropped image.
-    //const left = (inputImage.width - imgSize) / 2;
-    //const top = (inputImage.height - imgSize) / 2;
-    //var left = 0; // If you wish left based cropping instead.
-    //var top = 0; // If you wish left based cropping instead.
     if (imageCanvasCtx != null) {
       imageCanvasCtx.drawImage(
         imageToStyle,
@@ -78,15 +67,10 @@ const PhotoDisplay = ({
     )
 
     if (downloadImgData) {
-      // Convert image data to a data URL
       const dataURL = imageCanvas.toDataURL('image/png')
-
-      // Create a download link
       const a = document.createElement('a')
       a.href = dataURL
-      a.download = 'image.png' // Set the desired file name
-
-      // Trigger the download
+      a.download = 'image.png' 
       a.click()
     }
   }
@@ -104,8 +88,8 @@ const PhotoDisplay = ({
             <canvas id='canvasContainer2' className={styles.canvasPhoto} />
           </Card>
           <Button
-            sx={{ marginTop: '10px' }}
             variant='contained'
+            sx={{ width: '100%', mt: 2 }}
             onClick={handleDownloadImage}
           >
             Download

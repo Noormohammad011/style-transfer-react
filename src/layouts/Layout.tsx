@@ -1,7 +1,5 @@
+import Appbar from '../components/Appbar/Appbar'
 import styles from './layout.module.css'
-import utilStyles from './utils.module.css'
-
-const name = 'Fast Style Transfer for Arbitrary Styles'
 export const siteTitle = 'Fast Style Transfer for Arbitrary Styles Demo'
 
 export default function Layout({
@@ -12,41 +10,18 @@ export default function Layout({
   home?: boolean
 }) {
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
-        {home ? (
-          <>
-            <h1 className={utilStyles.heading2Xl}>{name}</h1>
-          </>
-        ) : (
-          <>
+    <>
+      <Appbar />
+      <div className={styles.container}>
+        <main>{children}</main>
+        {!home && (
+          <div className={styles.backToHome}>
             <a href='/'>
-              <a>
-                <img
-                  src='/images/profile.jpg'
-                  className={utilStyles.borderCircle}
-                  height={108}
-                  width={108}
-                  alt={name}
-                />
-              </a>
+              <a>← Back to home</a>
             </a>
-            <h2 className={utilStyles.headingLg}>
-              <a href='/'>
-                <a className={utilStyles.colorInherit}>{name}</a>
-              </a>
-            </h2>
-          </>
+          </div>
         )}
-      </header>
-      <main>{children}</main>
-      {!home && (
-        <div className={styles.backToHome}>
-          <a href='/'>
-            <a>← Back to home</a>
-          </a>
-        </div>
-      )}
-    </div>
+      </div>
+    </>
   )
 }
